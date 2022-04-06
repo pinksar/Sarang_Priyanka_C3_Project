@@ -18,10 +18,7 @@ public class Restaurant {
 
     public boolean isRestaurantOpen() {
         LocalTime localTime = getCurrentTime();
-        if(localTime.isAfter(openingTime) && localTime.isBefore(closingTime)){
-            return true;
-        }
-        return false;
+        return localTime.isAfter(openingTime) && localTime.isBefore(closingTime);
     }
 
     public LocalTime getCurrentTime(){ return  LocalTime.now(); }
@@ -65,6 +62,12 @@ public class Restaurant {
     }
 
     public Double calculateTotalOrderCostOfItemNames(List<String> itemNames) {
-        return null;
+        double orderCost = 0d;
+        if(itemNames != null && !itemNames.isEmpty()) {
+            orderCost = getMenu().stream()
+                    .filter(item -> itemNames.contains(item.getName()))
+                    .mapToDouble(Item::getPrice).sum();
+        }
+        return orderCost;
     }
 }

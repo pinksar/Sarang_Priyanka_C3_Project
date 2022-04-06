@@ -1,3 +1,4 @@
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -6,6 +7,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,6 +29,14 @@ class RestaurantTest {
         restaurant.addToMenu("Sweet corn soup",119);
         restaurant.addToMenu("Vegetable lasagne", 269);
     }
+
+    @AfterEach
+    public void postTest(){
+        System.out.println("Finished test case for ");
+        System.out.print(restaurant.getName());
+        restaurant.displayDetails();
+    }
+
     //>>>>>>>>>>>>>>>>>>>>>>>>>OPEN/CLOSED<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     //-------FOR THE 2 TESTS BELOW, YOU MAY USE THE CONCEPT OF MOCKING, IF YOU RUN INTO ANY TROUBLE
     @Test
@@ -40,7 +50,7 @@ class RestaurantTest {
     public void is_restaurant_open_should_return_false_if_time_is_outside_opening_and_closing_time(){
         Restaurant mockRestaurant = Mockito.spy(restaurant);
         when(mockRestaurant.getCurrentTime()).thenReturn(LocalTime.parse("23:30:00"));
-        Assertions.assertTrue(!mockRestaurant.isRestaurantOpen());
+        Assertions.assertFalse(mockRestaurant.isRestaurantOpen());
     }
     //<<<<<<<<<<<<<<<<<<<<<<<<<OPEN/CLOSED>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -73,6 +83,13 @@ class RestaurantTest {
                 .map(Item :: getName).collect(Collectors.toList());
         Double totalOrderCost = restaurant.calculateTotalOrderCostOfItemNames(itemNames);
         assertEquals(388.0, totalOrderCost);
+    }
+
+    @Test
+    public void calculate_total_order_cost_of_items_names_when_empty() {
+        List<String> itemNames = Collections.emptyList();
+        Double totalOrderCost = restaurant.calculateTotalOrderCostOfItemNames(itemNames);
+        assertEquals(0.0, totalOrderCost);
     }
     //<<<<<<<<<<<<<<<<<<<<<<<ORDER>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 }
